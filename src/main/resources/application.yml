@@ -1,0 +1,12 @@
+vaadin:
+  launch-browser: false
+
+spring:
+  application:
+    name: application
+
+  profiles:
+    active: @activatedProperties@
+
+server:
+  port: 8081
