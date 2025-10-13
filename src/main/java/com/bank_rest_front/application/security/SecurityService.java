@@ -1,5 +1,6 @@
 package com.bank_rest_front.application.security;
 
+import com.bank_rest_front.application.entity.User;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.server.VaadinServletRequest;
 import org.springframework.security.core.context.SecurityContext;
@@ -11,10 +12,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class SecurityService {
 
-    public UserDetails getAuthenticatedUser()  {
+    public User getAuthenticatedUser()  {
         SecurityContext context = SecurityContextHolder.getContext();
         Object principal = context.getAuthentication().getPrincipal();
-        return principal instanceof UserDetails user ? user : null;
+        return principal instanceof User user ? user : null;
     }
 
     public void logout() {

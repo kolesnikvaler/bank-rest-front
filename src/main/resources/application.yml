@@ -14,3 +14,6 @@ server:
 
 encryption:
   secret-key: ${ENCRYPTION_SECRET_KEY}
+
+bank-app:
+  url: ${BANK_APP_URL:http://localhost:8080}

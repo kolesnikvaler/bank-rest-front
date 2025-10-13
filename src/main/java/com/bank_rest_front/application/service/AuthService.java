@@ -1,5 +1,7 @@
 package com.bank_rest_front.application.service;
 
+import com.bank_rest_front.application.entity.User;
+import com.bank_rest_front.application.utils.AppUrls;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +21,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.net.URI;
+import java.util.List;
 
 @Service
 public class AuthService implements UserDetailsService {
@@ -50,7 +52,7 @@ public class AuthService implements UserDetailsService {
 
         // Создаём RequestEntity
         RequestEntity<AuthRequest> request = RequestEntity
-                .post(URI.create("http://bankcards-app:8080/auth/login"))
+                .post(URI.create(AppUrls.bankAppUrl + "/auth/login"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(authRequest);
 
@@ -61,7 +63,6 @@ public class AuthService implements UserDetailsService {
             AuthResponse authResponse = response.getBody();
 
             String token = authResponse.token;
-
             try {
                 JsonNode jsonNodeHeader = jwtService.readHeader(token);
                 JsonParser traverse = jsonNodeHeader.traverse();
@@ -70,9 +71,12 @@ public class AuthService implements UserDetailsService {
                 System.out.printf("User auth: %s %s%n", jwtHeaders.last_name, jwtHeaders.first_name);
                 System.out.printf("Role: %s%n", jwtHeaders.role);
                 return User.builder()
+                        .lastName(jwtHeaders.last_name())
+                        .firstName(jwtHeaders.first_name())
+                        .token(token)
                         .username(userEmail)
                         .password(passwordEncoder.encode(password))
-                        .authorities(new SimpleGrantedAuthority(jwtHeaders.role))
+                        .authorities(List.of(new SimpleGrantedAuthority(jwtHeaders.role)))
                         .accountExpired(jwtHeaders.is_account_expired)
                         .disabled(!jwtHeaders.is_enabled)
                         .build();
@@ -95,3 +99,10 @@ public class AuthService implements UserDetailsService {
             Boolean is_enabled
     ) {}
 }
+//                return User.builder()
+//                        .username(userEmail)
+//                        .password(passwordEncoder.encode(password))
+//                        .authorities(new SimpleGrantedAuthority(jwtHeaders.role))
+//                        .accountExpired(jwtHeaders.is_account_expired)
+//                        .disabled(!jwtHeaders.is_enabled)
+//                        .build();

@@ -1,5 +1,6 @@
 package com.bank_rest_front.application.view.register;
 
+import com.bank_rest_front.application.utils.AppUrls;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.HasValueAndElement;
@@ -89,7 +90,7 @@ public class RegistrationForm extends FormLayout {
 
             // Создаём RequestEntity
             RequestEntity<UserCreateRequest> request = RequestEntity
-                    .post(URI.create("http://bankcards-app:8080/auth/register"))
+                    .post(URI.create(AppUrls.bankAppUrl + "/auth/register"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(userCreateRequest);
 

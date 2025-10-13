@@ -1,7 +1,9 @@
 package com.bank_rest_front.application.view;
 
+import com.bank_rest_front.application.entity.User;
 import com.bank_rest_front.application.security.SecurityService;
 import com.bank_rest_front.application.view.enums.NavigationList;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
@@ -9,24 +11,30 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.lumo.LumoUtility;
-import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Arrays;
 
 @org.springframework.stereotype.Component
 @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class MainLayout extends AppLayout {
 
     private final SecurityService securityService;
+    private static final String CURRENT_USER = "CURRENT_USER";
 
     public MainLayout(SecurityService securityService) {
         this.securityService = securityService;
 
+        User user = securityService.getAuthenticatedUser();
+        UI.getCurrent().getSession().setAttribute(CURRENT_USER, user);
+
         configureMainLayout();
+    }
+
+    public static User getCurrentUser() {
+        return (User) VaadinSession.getCurrent().getAttribute(CURRENT_USER);
     }
 
     private void configureMainLayout() {
@@ -35,7 +43,13 @@ public class MainLayout extends AppLayout {
     }
 
     private void createHeader() {
-        Button logout = new Button("Logout", e -> securityService.logout());
+        Button logout = new Button("Logout", e -> {
+            UI ui = UI.getCurrent();
+            ui.removeAll();
+            ui.getSession().close();
+            ui.getSession().getSession().invalidate();
+            securityService.logout();
+        });
         logout.getStyle().set("margin-top", "0px");
         logout.getStyle().set("margin-bottom", "0px");
 
