@@ -4,9 +4,11 @@ import com.bank_rest_front.application.utils.SecurityUtils;
 import com.bank_rest_front.application.view.nav_view.CreateCardApplicationsView;
 import com.bank_rest_front.application.view.nav_view.PaymentsView;
 import com.bank_rest_front.application.view.nav_view.StartPageView;
+import com.bank_rest_front.application.view.nav_view.UserManagementView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouterLink;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,13 +22,14 @@ public class NavigationList extends ArrayList<HorizontalLayout> {
 
     public NavigationList(UserDetails user) {
         this.user = user;
-        add(HOME, "Главная", StartPageView.class);
-        add(MONEY_EXCHANGE, "Платежи", PaymentsView.class);
-        add(CREDIT_CARD, "Заявки на создание карт", CreateCardApplicationsView.class);
+        add(HOME, StartPageView.class);
+        add(MONEY_EXCHANGE, PaymentsView.class);
+        add(CREDIT_CARD, CreateCardApplicationsView.class);
+        add(USER, UserManagementView.class);
     }
 
-    private void add(VaadinIcon icon, String label, Class<? extends Component> clazz) {
-        HorizontalLayout link = new HorizontalLayout(icon.create(), new RouterLink(label, clazz));
+    private void add(VaadinIcon icon, Class<? extends Component> clazz) {
+        HorizontalLayout link = new HorizontalLayout(icon.create(), new RouterLink(getPageLabel(clazz), clazz));
 
         if (clazz.isAnnotationPresent(RolesAllowed.class)) {
             RolesAllowed rolesAllowed = clazz.getAnnotation(RolesAllowed.class);
@@ -34,5 +37,13 @@ public class NavigationList extends ArrayList<HorizontalLayout> {
                 add(link);
         } else
             add(link);
+    }
+
+    private String getPageLabel(Class<? extends Component> clazz) {
+        if (clazz.isAnnotationPresent(PageTitle.class)) {
+            PageTitle pageTitle = clazz.getAnnotation(PageTitle.class);
+            return pageTitle.value();
+        } else
+            return "Unknown";
     }
 }

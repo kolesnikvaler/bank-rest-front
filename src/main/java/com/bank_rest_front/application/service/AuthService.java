@@ -99,10 +99,3 @@ public class AuthService implements UserDetailsService {
             Boolean is_enabled
     ) {}
 }
-//                return User.builder()
-//                        .username(userEmail)
-//                        .password(passwordEncoder.encode(password))
-//                        .authorities(new SimpleGrantedAuthority(jwtHeaders.role))
-//                        .accountExpired(jwtHeaders.is_account_expired)
-//                        .disabled(!jwtHeaders.is_enabled)
-//                        .build();

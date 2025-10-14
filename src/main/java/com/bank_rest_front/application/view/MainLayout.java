@@ -9,6 +9,7 @@ import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.server.VaadinSession;
@@ -22,12 +23,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class MainLayout extends AppLayout {
 
     private final SecurityService securityService;
+    private final User user;
+
     private static final String CURRENT_USER = "CURRENT_USER";
 
     public MainLayout(SecurityService securityService) {
         this.securityService = securityService;
 
-        User user = securityService.getAuthenticatedUser();
+        user = securityService.getAuthenticatedUser();
         UI.getCurrent().getSession().setAttribute(CURRENT_USER, user);
 
         configureMainLayout();
@@ -38,12 +41,13 @@ public class MainLayout extends AppLayout {
     }
 
     private void configureMainLayout() {
+        setPrimarySection(Section.DRAWER);
         createHeader();
         createDrawer();
     }
 
     private void createHeader() {
-        Button logout = new Button("Logout", e -> {
+        Button logout = new Button(user.getShortName(), VaadinIcon.EXIT_O.create(), e -> {
             UI ui = UI.getCurrent();
             ui.removeAll();
             ui.getSession().close();
