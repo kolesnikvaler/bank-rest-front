@@ -1,11 +1,10 @@
 package com.bank_rest_front.application.dto;
 
-import com.bank_rest_front.application.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
-
-import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record GetAllUsersDto(List<UserDto> users) {
+public record UserDto(
+        String lastName,
+        String firstName
+) {
 }

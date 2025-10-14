@@ -1,6 +1,7 @@
 package com.bank_rest_front.application.service;
 
 import com.bank_rest_front.application.api.BankApi;
+import com.bank_rest_front.application.dto.UserDto;
 import com.bank_rest_front.application.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -20,7 +21,7 @@ public class BankUserService {
         this.bankApi = bankApi;
     }
 
-    public List<User> getBankUsers(User currentUser) {
+    public List<UserDto> getBankUsers(User currentUser) {
         try {
             return bankApi.getUsers(currentUser);
         } catch (Exception e) {

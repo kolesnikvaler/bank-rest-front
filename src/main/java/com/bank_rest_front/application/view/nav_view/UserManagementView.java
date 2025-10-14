@@ -1,5 +1,6 @@
 package com.bank_rest_front.application.view.nav_view;
 
+import com.bank_rest_front.application.dto.UserDto;
 import com.bank_rest_front.application.entity.User;
 import com.bank_rest_front.application.service.BankUserService;
 import com.bank_rest_front.application.view.MainLayout;
@@ -22,12 +23,11 @@ public class UserManagementView extends VerticalLayout {
     public UserManagementView(BankUserService userService) {
         setSizeFull();
 
-        Grid<User> grid = new Grid<>();
+        Grid<UserDto> grid = new Grid<>();
         grid.setSizeFull();
         grid.addThemeVariants(LUMO_ROW_STRIPES);
-        grid.addColumn(new ComponentRenderer<>(user -> new NativeLabel(user.getLastName())));
-        grid.addColumn(new ComponentRenderer<>(user -> new NativeLabel(user.getFirstName())));
-        grid.addColumn(new ComponentRenderer<>(user -> new NativeLabel(user.getUsername())));
+        grid.addColumn(new ComponentRenderer<>(user -> new NativeLabel(user.lastName() + " " + user.firstName())))
+                .setHeader("ФИ пользователя");
 
         grid.setItems(userService.getBankUsers(MainLayout.getCurrentUser()));
 
