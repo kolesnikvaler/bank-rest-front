@@ -26,8 +26,14 @@ public class UserManagementView extends VerticalLayout {
         Grid<UserDto> grid = new Grid<>();
         grid.setSizeFull();
         grid.addThemeVariants(LUMO_ROW_STRIPES);
+        grid.addColumn(new ComponentRenderer<>(user -> new NativeLabel(user.dateCreate() != null ? String.valueOf(user.dateCreate().toLocalDate()) : "---")))
+                .setHeader("Создан");
         grid.addColumn(new ComponentRenderer<>(user -> new NativeLabel(user.lastName() + " " + user.firstName())))
-                .setHeader("ФИ пользователя");
+                .setHeader("Пользователь");
+        grid.addColumn(new ComponentRenderer<>(user -> new NativeLabel(user.email())))
+                .setHeader("Email");
+        grid.addColumn(new ComponentRenderer<>(user -> new NativeLabel(user.role() != null ? user.role().name() : "---")))
+                .setHeader("Роль");
 
         grid.setItems(userService.getBankUsers(MainLayout.getCurrentUser()));
 

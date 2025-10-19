@@ -59,12 +59,12 @@ public class AuthService implements UserDetailsService {
         // Отправляем запрос
         ResponseEntity<AuthResponse> response = restTemplate.exchange(request, AuthResponse.class);
 
-        if (response.getStatusCode() == HttpStatus.OK) {
+        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
             AuthResponse authResponse = response.getBody();
 
             String token = authResponse.token;
             try {
-                JsonNode jsonNodeHeader = jwtService.readHeader(token);
+                JsonNode jsonNodeHeader = jwtService.readPayload(token);
                 JsonParser traverse = jsonNodeHeader.traverse();
                 JwtHeaders jwtHeaders = mapper.readValue(traverse, JwtHeaders.class);
 

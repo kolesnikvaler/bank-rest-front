@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
 public class User implements UserDetails {
     // MetaInfo
     private String lastName;
@@ -31,16 +32,6 @@ public class User implements UserDetails {
         this.authorities = builder.authorities;
         this.accountExpired = builder.accountExpired;
         this.disabled = builder.disabled;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-    public String getFirstName() {
-        return firstName;
-    }
-    public String getToken() {
-        return token;
     }
 
     public String getBearerToken() {

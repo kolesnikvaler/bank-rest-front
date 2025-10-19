@@ -3,9 +3,7 @@ package com.bank_rest_front.application.api;
 import com.bank_rest_front.application.dto.GetAllUsersDto;
 import com.bank_rest_front.application.dto.UserDto;
 import com.bank_rest_front.application.entity.User;
-import com.bank_rest_front.application.service.AuthService;
 import com.bank_rest_front.application.utils.AppUrls;
-import com.bank_rest_front.application.view.MainLayout;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -33,7 +31,7 @@ public class BankApi {
         // Отправляем запрос
         ResponseEntity<GetAllUsersDto> response = restTemplate.exchange(request, GetAllUsersDto.class);
         System.out.println(response.getBody());
-        return response.getStatusCode() == HttpStatus.OK && response.getBody().users() != null ?
+        return response.getStatusCode() == HttpStatus.OK && response.getBody() != null && response.getBody().users() != null ?
                 response.getBody().users() :
                 new ArrayList<>(0);
     }
